@@ -29,10 +29,10 @@
   ],
   "item": [
     {
-      "name": "Authentication",
+      "name": "1. Authentication",
       "item": [
         {
-          "name": "Register Admin",
+          "name": "1.1 Register Admin",
           "event": [
             {
               "listen": "test",
@@ -42,6 +42,7 @@
                   "    const response = pm.response.json();",
                   "    pm.collectionVariables.set('admin_id', response.userId);",
                   "    pm.test('Admin registered successfully', function() {",
+                  "        pm.expect(response.success).to.be.true;",
                   "        pm.expect(response.message).to.include('successfully');",
                   "    });",
                   "}"
@@ -64,20 +65,15 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
             },
             "description": "Register a new admin user"
           },
           "response": []
         },
         {
-          "name": "Register User",
+          "name": "1.2 Register User",
           "event": [
             {
               "listen": "test",
@@ -87,7 +83,7 @@
                   "    const response = pm.response.json();",
                   "    pm.collectionVariables.set('user_id', response.userId);",
                   "    pm.test('User registered successfully', function() {",
-                  "        pm.expect(response.message).to.include('successfully');",
+                  "        pm.expect(response.success).to.be.true;",
                   "    });",
                   "}"
                 ],
@@ -109,20 +105,15 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
             },
             "description": "Register a new regular user"
           },
           "response": []
         },
         {
-          "name": "Login Admin",
+          "name": "1.3 Login Admin",
           "event": [
             {
               "listen": "test",
@@ -155,20 +146,15 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
             },
             "description": "Login as admin and save token"
           },
           "response": []
         },
         {
-          "name": "Login User",
+          "name": "1.4 Login User",
           "event": [
             {
               "listen": "test",
@@ -201,20 +187,15 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
             },
             "description": "Login as regular user and save token"
           },
           "response": []
         },
         {
-          "name": "Logout",
+          "name": "1.5 Logout",
           "request": {
             "method": "POST",
             "header": [
@@ -225,26 +206,20 @@
             ],
             "url": {
               "raw": "{{base_url}}/auth/logout",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "logout"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
             },
             "description": "Logout user (blacklist token)"
           },
           "response": []
         }
-      ],
-      "description": "Authentication endpoints for user registration and login"
+      ]
     },
     {
-      "name": "Events",
+      "name": "2. Events (Admin)",
       "item": [
         {
-          "name": "Create Event (Admin)",
+          "name": "2.1 Create Event",
           "event": [
             {
               "listen": "test",
@@ -254,7 +229,7 @@
                   "    const response = pm.response.json();",
                   "    pm.collectionVariables.set('event_id', response.event._id);",
                   "    pm.test('Event created successfully', function() {",
-                  "        pm.expect(response.message).to.include('successfully');",
+                  "        pm.expect(response.success).to.be.true;",
                   "        pm.expect(response.event).to.have.property('_id');",
                   "    });",
                   "}"
@@ -281,124 +256,15 @@
             },
             "url": {
               "raw": "{{base_url}}/events",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events"]
             },
             "description": "Create a new event (Admin only)"
           },
           "response": []
         },
         {
-          "name": "Get All Events",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{user_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/events",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ]
-            },
-            "description": "Get all events"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Events by Date",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{user_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/events?date=2025-12-15",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ],
-              "query": [
-                {
-                  "key": "date",
-                  "value": "2025-12-15"
-                }
-              ]
-            },
-            "description": "Filter events by date"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Events by Location",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{user_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/events?location=New York",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ],
-              "query": [
-                {
-                  "key": "location",
-                  "value": "New York"
-                }
-              ]
-            },
-            "description": "Filter events by location"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Event by ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{user_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/events/{{event_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}"
-              ]
-            },
-            "description": "Get a single event by ID"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Event (Admin)",
+          "name": "2.2 Update Event",
           "request": {
             "method": "PUT",
             "header": [
@@ -417,20 +283,15 @@
             },
             "url": {
               "raw": "{{base_url}}/events/{{event_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events", "{{event_id}}"]
             },
             "description": "Update an event (Admin only)"
           },
           "response": []
         },
         {
-          "name": "Delete Event (Admin)",
+          "name": "2.3 Delete Event",
           "request": {
             "method": "DELETE",
             "header": [
@@ -441,26 +302,113 @@
             ],
             "url": {
               "raw": "{{base_url}}/events/{{event_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events", "{{event_id}}"]
             },
             "description": "Delete an event (Admin only)"
           },
           "response": []
         }
-      ],
-      "description": "Event management endpoints"
+      ]
     },
     {
-      "name": "Event Registration",
+      "name": "3. Events (Public Access)",
       "item": [
         {
-          "name": "Register for Event",
+          "name": "3.1 Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events",
+              "host": ["{{base_url}}"],
+              "path": ["events"]
+            },
+            "description": "Get all events"
+          },
+          "response": []
+        },
+        {
+          "name": "3.2 Get Events by Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events?date=2025-12-15",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2025-12-15"
+                }
+              ]
+            },
+            "description": "Filter events by date"
+          },
+          "response": []
+        },
+        {
+          "name": "3.3 Get Events by Location",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events?location=New York",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "New York"
+                }
+              ]
+            },
+            "description": "Filter events by location"
+          },
+          "response": []
+        },
+        {
+          "name": "3.4 Get Event by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/{{event_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["events", "{{event_id}}"]
+            },
+            "description": "Get a single event by ID"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Event Registration",
+      "item": [
+        {
+          "name": "4.1 Register for Event",
           "event": [
             {
               "listen": "test",
@@ -487,21 +435,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/events/{{event_id}}/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events", "{{event_id}}", "register"]
             },
             "description": "Register the authenticated user for an event"
           },
           "response": []
         },
         {
-          "name": "Cancel Registration",
+          "name": "4.2 Cancel Registration",
           "request": {
             "method": "DELETE",
             "header": [
@@ -512,52 +454,20 @@
             ],
             "url": {
               "raw": "{{base_url}}/events/{{event_id}}/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events", "{{event_id}}", "register"]
             },
             "description": "Cancel registration for an event"
           },
           "response": []
-        },
-        {
-          "name": "Test: Already Registered",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{user_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/events/{{event_id}}/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}",
-                "register"
-              ]
-            },
-            "description": "Test edge case: Try to register again (should fail)"
-          },
-          "response": []
         }
-      ],
-      "description": "Event registration management"
+      ]
     },
     {
-      "name": "Analytics (Admin)",
+      "name": "5. Analytics (Admin Only)",
       "item": [
         {
-          "name": "Get Events Per Month",
+          "name": "5.1 Get Events Per Month",
           "request": {
             "method": "GET",
             "header": [
@@ -568,20 +478,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/analytics/events-per-month",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "analytics",
-                "events-per-month"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "events-per-month"]
             },
             "description": "Get events count per month for current year (Admin only)"
           },
           "response": []
         },
         {
-          "name": "Get Top 3 Events",
+          "name": "5.2 Get Top 3 Events",
           "request": {
             "method": "GET",
             "header": [
@@ -592,44 +497,34 @@
             ],
             "url": {
               "raw": "{{base_url}}/analytics/top-events",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "analytics",
-                "top-events"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "top-events"]
             },
             "description": "Get top 3 events by registration count (Admin only)"
           },
           "response": []
         }
-      ],
-      "description": "Analytics endpoints for admins"
+      ]
     },
     {
-      "name": "Edge Cases & Error Testing",
+      "name": "6. Error Testing",
       "item": [
         {
-          "name": "Test: No Token",
+          "name": "6.1 No Token (401)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/events",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events"]
             },
-            "description": "Test authentication: Access without token (should fail with 401)"
+            "description": "Test: Access without token (should return 401)"
           },
           "response": []
         },
         {
-          "name": "Test: User Access Admin Route",
+          "name": "6.2 User Creates Event (403)",
           "request": {
             "method": "POST",
             "header": [
@@ -648,19 +543,15 @@
             },
             "url": {
               "raw": "{{base_url}}/events",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events"]
             },
-            "description": "Test authorization: Regular user trying to create event (should fail with 403)"
+            "description": "Test: Regular user trying to create event (should return 403)"
           },
           "response": []
         },
         {
-          "name": "Test: Create Event Without Title",
+          "name": "6.3 Missing Title (400)",
           "request": {
             "method": "POST",
             "header": [
@@ -679,19 +570,34 @@
             },
             "url": {
               "raw": "{{base_url}}/events",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events"]
             },
-            "description": "Test validation: Create event without required title (should fail with 400)"
+            "description": "Test: Create event without title (should return 400)"
           },
           "response": []
         },
         {
-          "name": "Test: Invalid Event ID",
+          "name": "6.4 Already Registered (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/{{event_id}}/register",
+              "host": ["{{base_url}}"],
+              "path": ["events", "{{event_id}}", "register"]
+            },
+            "description": "Test: Try to register twice (should return 400)"
+          },
+          "response": []
+        },
+        {
+          "name": "6.5 Invalid Event ID (500/404)",
           "request": {
             "method": "GET",
             "header": [
@@ -702,45 +608,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/events/invalidid123",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "invalidid123"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["events", "invalidid123"]
             },
-            "description": "Test error handling: Get event with invalid ID (should fail with 404 or 500)"
-          },
-          "response": []
-        },
-        {
-          "name": "Test: Cancel Non-existent Registration",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{user_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/events/{{event_id}}/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "events",
-                "{{event_id}}",
-                "register"
-              ]
-            },
-            "description": "Test edge case: Cancel registration that doesn't exist (should fail with 404)"
+            "description": "Test: Get event with invalid ID"
           },
           "response": []
         }
-      ],
-      "description": "Test edge cases and error scenarios"
+      ]
     }
   ]
 }
