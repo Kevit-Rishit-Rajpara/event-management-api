@@ -1,25 +1,114 @@
 # Event Management API
 
-A RESTful API for managing events with user authentication, role-based authorization, event registration, and analytics.
+A production-ready RESTful API for managing events with user authentication, role-based authorization, event registration, and analytics. Built with Node.js, Express, and MongoDB.
 
-## Base URL
+## 🚀 Features
+
+- ✅ User authentication with JWT
+- ✅ Role-based authorization (User/Admin)
+- ✅ Event CRUD operations
+- ✅ Event registration with capacity management
+- ✅ Analytics dashboard (events per month, top events)
+- ✅ Comprehensive error handling
+- ✅ Input validation at model level
+- ✅ Token blacklisting for logout
+- ✅ Code documentation with JSDoc
+- ✅ ESLint & Prettier configured
+- ✅ REST API standards compliant
+
+## 📋 Base URL
 ```
 http://localhost:3000/api
 ```
 
-## Technologies
-- Node.js & Express
-- MongoDB & Mongoose
-- JWT Authentication
-- bcryptjs for password hashing
+## 🛠️ Technologies
+
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Database:** MongoDB with Mongoose ODM
+- **Authentication:** JWT (jsonwebtoken)
+- **Password Hashing:** bcryptjs
+- **Validation:** Mongoose schema validation
+- **Code Quality:** ESLint, Prettier
+- **Development:** Nodemon
 
 ---
 
-## API Documentation
+## 📦 Installation
 
-### 🔐 Authentication APIs
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB (local or Atlas)
+- npm or yarn
 
-#### 1. Register User
+### Steps
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Kevit-Rishit-Rajpara/event-management-api.git
+cd event-management-api
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment variables:
+
+Create a `.env` file in the root directory:
+```env
+MONGO_URI=mongodb://localhost:27017/event-management
+# Or use MongoDB Atlas:
+# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/event-management
+
+JWT_SECRET=your_super_secret_jwt_key_here
+PORT=3000
+NODE_ENV=development
+```
+
+4. Start the server:
+```bash
+# Development mode with auto-reload
+npm run dev
+
+# Production mode
+npm start
+```
+
+5. The API will be running at `http://localhost:3000`
+
+---
+
+## 📚 API Documentation
+
+### Response Format
+
+All API responses follow this standard format:
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": {}
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "statusCode": 400,
+  "message": "Error message"
+}
+```
+
+---
+
+## 🔐 Authentication APIs
+
+### 1. Register User
 **POST** `/api/auth/register`
 
 Create a new user account.
@@ -34,13 +123,14 @@ Create a new user account.
 ```
 
 **Fields:**
-- `username` (string, required): Unique username
+- `username` (string, required): Unique username (min 3 characters)
 - `password` (string, required): User password
 - `role` (string, optional): Either "User" or "Admin" (default: "User")
 
 **Response (201 Created):**
 ```json
 {
+  "success": true,
   "message": "User registered successfully",
   "userId": "64f9a8b3c1234567890abcde"
 }
@@ -50,21 +140,25 @@ Create a new user account.
 ```json
 // 400 - Username already exists
 {
+  "success": false,
+  "statusCode": 400,
   "message": "Username already exists"
 }
 
-// 400 - Missing fields
+// 400 - Validation error
 {
-  "message": "Username and password are required"
+  "success": false,
+  "statusCode": 400,
+  "message": "Username must be at least 3 characters long"
 }
 ```
 
 ---
 
-#### 2. Login
+### 2. Login
 **POST** `/api/auth/login`
 
-Login and receive JWT token.
+Login and receive JWT token (valid for 24 hours).
 
 **Request Body:**
 ```json
@@ -77,6 +171,7 @@ Login and receive JWT token.
 **Response (200 OK):**
 ```json
 {
+  "success": true,
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "role": "User",
   "userId": "64f9a8b3c1234567890abcde"
@@ -87,25 +182,44 @@ Login and receive JWT token.
 ```json
 // 401 - Invalid credentials
 {
+  "success": false,
+  "statusCode": 401,
   "message": "Invalid credentials"
-}
-
-// 400 - Missing fields
-{
-  "message": "Username and password are required"
 }
 ```
 
 ---
 
-### 🎉 Event Management APIs
+### 3. Logout
+**POST** `/api/auth/logout`
+
+Logout user by blacklisting the current token.
+
+**Headers:**
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Logged out successfully"
+}
+```
+
+**Note:** After logout, the token is blacklisted and cannot be used again.
+
+---
+
+## 🎉 Event Management APIs
 
 All event APIs require authentication. Include the JWT token in the Authorization header:
 ```
 Authorization: Bearer <your_jwt_token>
 ```
 
-#### 3. Create Event (Admin Only)
+### 4. Create Event (Admin Only)
 **POST** `/api/events`
 
 **Headers:**
@@ -126,15 +240,16 @@ Content-Type: application/json
 ```
 
 **Fields:**
-- `title` (string, required): Event title
+- `title` (string, required): Event title (min 3 characters)
 - `description` (string, optional): Event description
-- `date` (Date, required): Event date and time
+- `date` (Date, required): Event date and time (ISO 8601 format)
 - `location` (string, optional): Event location
-- `maxAttendees` (number, optional): Maximum number of attendees
+- `maxAttendees` (number, optional): Maximum attendees (min 1)
 
 **Response (201 Created):**
 ```json
 {
+  "success": true,
   "message": "Event created successfully",
   "event": {
     "_id": "64f9a8b3c1234567890abcde",
@@ -143,32 +258,33 @@ Content-Type: application/json
     "date": "2025-12-15T10:00:00.000Z",
     "location": "New York",
     "maxAttendees": 100,
-    "createdBy": "64f9a8b3c1234567890abcde"
+    "createdBy": "64f9a8b3c1234567890abcde",
+    "createdAt": "2024-10-16T10:00:00.000Z",
+    "updatedAt": "2024-10-16T10:00:00.000Z"
   }
 }
 ```
 
 **Error Responses:**
 ```json
-// 400 - Missing required fields
+// 400 - Validation error
 {
+  "success": false,
+  "statusCode": 400,
   "message": "Title and date are required"
 }
 
 // 403 - Not an admin
 {
+  "success": false,
+  "statusCode": 403,
   "message": "Forbidden: Admins only"
-}
-
-// 401 - No token
-{
-  "message": "No token provided"
 }
 ```
 
 ---
 
-#### 4. Get All Events
+### 5. Get All Events
 **GET** `/api/events`
 
 Get all events with optional filtering.
@@ -193,6 +309,8 @@ GET /api/events?date=2025-12-15&location=New York
 **Response (200 OK):**
 ```json
 {
+  "success": true,
+  "count": 1,
   "events": [
     {
       "_id": "64f9a8b3c1234567890abcde",
@@ -205,7 +323,9 @@ GET /api/events?date=2025-12-15&location=New York
         "_id": "64f9a8b3c1234567890abcde",
         "username": "admin",
         "role": "Admin"
-      }
+      },
+      "createdAt": "2024-10-16T10:00:00.000Z",
+      "updatedAt": "2024-10-16T10:00:00.000Z"
     }
   ]
 }
@@ -213,7 +333,7 @@ GET /api/events?date=2025-12-15&location=New York
 
 ---
 
-#### 5. Get Event by ID
+### 6. Get Event by ID
 **GET** `/api/events/:id`
 
 Get a single event by ID.
@@ -223,14 +343,10 @@ Get a single event by ID.
 Authorization: Bearer <jwt_token>
 ```
 
-**Example:**
-```
-GET /api/events/64f9a8b3c1234567890abcde
-```
-
 **Response (200 OK):**
 ```json
 {
+  "success": true,
   "event": {
     "_id": "64f9a8b3c1234567890abcde",
     "title": "Tech Conference 2025",
@@ -251,13 +367,15 @@ GET /api/events/64f9a8b3c1234567890abcde
 ```json
 // 404 - Event not found
 {
+  "success": false,
+  "statusCode": 404,
   "message": "Event not found"
 }
 ```
 
 ---
 
-#### 6. Update Event (Admin Only)
+### 7. Update Event (Admin Only)
 **PUT** `/api/events/:id`
 
 **Headers:**
@@ -280,6 +398,7 @@ Content-Type: application/json
 **Response (200 OK):**
 ```json
 {
+  "success": true,
   "message": "Event updated successfully",
   "event": {
     "_id": "64f9a8b3c1234567890abcde",
@@ -293,22 +412,9 @@ Content-Type: application/json
 }
 ```
 
-**Error Responses:**
-```json
-// 404 - Event not found
-{
-  "message": "Event not found"
-}
-
-// 403 - Not an admin
-{
-  "message": "Forbidden: Admins only"
-}
-```
-
 ---
 
-#### 7. Delete Event (Admin Only)
+### 8. Delete Event (Admin Only)
 **DELETE** `/api/events/:id`
 
 **Headers:**
@@ -316,36 +422,19 @@ Content-Type: application/json
 Authorization: Bearer <admin_jwt_token>
 ```
 
-**Example:**
-```
-DELETE /api/events/64f9a8b3c1234567890abcde
-```
-
 **Response (200 OK):**
 ```json
 {
+  "success": true,
   "message": "Event deleted successfully"
-}
-```
-
-**Error Responses:**
-```json
-// 404 - Event not found
-{
-  "message": "Event not found"
-}
-
-// 403 - Not an admin
-{
-  "message": "Forbidden: Admins only"
 }
 ```
 
 ---
 
-### 📝 Event Registration APIs
+## 📝 Event Registration APIs
 
-#### 8. Register for Event
+### 9. Register for Event
 **POST** `/api/events/:id/register`
 
 Register the authenticated user for an event.
@@ -355,19 +444,16 @@ Register the authenticated user for an event.
 Authorization: Bearer <jwt_token>
 ```
 
-**Example:**
-```
-POST /api/events/64f9a8b3c1234567890abcde/register
-```
-
 **Response (201 Created):**
 ```json
 {
+  "success": true,
   "message": "Successfully registered for event",
   "registration": {
     "_id": "64f9a8b3c1234567890abcde",
     "user": "64f9a8b3c1234567890abcde",
-    "event": "64f9a8b3c1234567890abcde"
+    "event": "64f9a8b3c1234567890abcde",
+    "createdAt": "2024-10-16T10:00:00.000Z"
   }
 }
 ```
@@ -376,23 +462,29 @@ POST /api/events/64f9a8b3c1234567890abcde/register
 ```json
 // 404 - Event not found
 {
+  "success": false,
+  "statusCode": 404,
   "message": "Event not found"
 }
 
 // 400 - Already registered
 {
+  "success": false,
+  "statusCode": 400,
   "message": "You are already registered for this event"
 }
 
 // 400 - Event is full
 {
+  "success": false,
+  "statusCode": 400,
   "message": "Event is full"
 }
 ```
 
 ---
 
-#### 9. Cancel Registration
+### 10. Cancel Registration
 **DELETE** `/api/events/:id/register`
 
 Cancel the authenticated user's registration for an event.
@@ -402,14 +494,10 @@ Cancel the authenticated user's registration for an event.
 Authorization: Bearer <jwt_token>
 ```
 
-**Example:**
-```
-DELETE /api/events/64f9a8b3c1234567890abcde/register
-```
-
 **Response (200 OK):**
 ```json
 {
+  "success": true,
   "message": "Registration cancelled successfully"
 }
 ```
@@ -418,15 +506,17 @@ DELETE /api/events/64f9a8b3c1234567890abcde/register
 ```json
 // 404 - Not registered
 {
+  "success": false,
+  "statusCode": 404,
   "message": "You are not registered for this event"
 }
 ```
 
 ---
 
-### 📊 Analytics APIs (Admin Only)
+## 📊 Analytics APIs (Admin Only)
 
-#### 10. Get Events Per Month
+### 11. Get Events Per Month
 **GET** `/api/analytics/events-per-month`
 
 Get the number of events per month for the current year.
@@ -439,6 +529,8 @@ Authorization: Bearer <admin_jwt_token>
 **Response (200 OK):**
 ```json
 {
+  "success": true,
+  "year": 2025,
   "eventsPerMonth": [
     {
       "month": 1,
@@ -456,17 +548,9 @@ Authorization: Bearer <admin_jwt_token>
 }
 ```
 
-**Error Response:**
-```json
-// 403 - Not an admin
-{
-  "message": "Forbidden: Admins only"
-}
-```
-
 ---
 
-#### 11. Get Top 3 Events
+### 12. Get Top 3 Events
 **GET** `/api/analytics/top-events`
 
 Get the top 3 events by registration count.
@@ -479,6 +563,8 @@ Authorization: Bearer <admin_jwt_token>
 **Response (200 OK):**
 ```json
 {
+  "success": true,
+  "count": 3,
   "topEvents": [
     {
       "_id": "64f9a8b3c1234567890abcde",
@@ -508,126 +594,264 @@ Authorization: Bearer <admin_jwt_token>
 }
 ```
 
-**Error Response:**
-```json
-// 403 - Not an admin
-{
-  "message": "Forbidden: Admins only"
-}
-```
-
 ---
 
-## Common Error Responses
+## ⚠️ Error Responses
 
-### 401 Unauthorized
+### Common HTTP Status Codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Success |
+| 201 | Created |
+| 400 | Bad Request (validation error) |
+| 401 | Unauthorized (missing/invalid token) |
+| 403 | Forbidden (insufficient permissions) |
+| 404 | Not Found |
+| 500 | Internal Server Error |
+
+### Error Response Format
+
 ```json
 {
+  "success": false,
+  "statusCode": 401,
   "message": "No token provided"
 }
 ```
+
+### Authentication Errors (401)
+
 ```json
-{
-  "message": "Invalid token"
-}
-```
-```json
-{
-  "message": "Token expired"
-}
+{ "success": false, "statusCode": 401, "message": "No token provided" }
+{ "success": false, "statusCode": 401, "message": "Invalid token" }
+{ "success": false, "statusCode": 401, "message": "Token expired" }
+{ "success": false, "statusCode": 401, "message": "Token has been invalidated. Please login again" }
 ```
 
-### 403 Forbidden
+### Authorization Errors (403)
+
 ```json
-{
-  "message": "Forbidden: Admins only"
-}
+{ "success": false, "statusCode": 403, "message": "Forbidden: Admins only" }
 ```
 
-### 500 Internal Server Error
+### Route Not Found (404)
+
 ```json
-{
-  "message": "Error message description",
-  "error": "Detailed error message"
-}
+{ "success": false, "statusCode": 404, "message": "Route not found - /api/invalid/route" }
 ```
 
 ---
 
-## Setup Instructions
+## 🧪 Testing with Postman
 
-1. Install dependencies:
-```bash
-npm install
+### Import Collection
+
+1. Import the `Event-Management-API.postman_collection.json` file into Postman
+2. The collection includes all endpoints organized by category
+3. Environment variables are automatically set after login
+
+### Testing Workflow
+
+#### Step 1: Register Users
 ```
-
-2. Configure `.env` file:
-```env
-MONGO_URI=mongodb://localhost:27017/event-management
-JWT_SECRET=YOUR_SUPER_SECRET_KEY
-PORT=3000
-```
-
-3. Start the server:
-```bash
-npm run dev
-```
-
----
-
-## Testing Workflow with Postman
-
-### Step 1: Register Admin
-```
-POST http://localhost:3000/api/auth/register
+POST /api/auth/register
 Body: { "username": "admin", "password": "admin123", "role": "Admin" }
-```
 
-### Step 2: Register Regular User
-```
-POST http://localhost:3000/api/auth/register
+POST /api/auth/register
 Body: { "username": "user1", "password": "user123" }
 ```
 
-### Step 3: Login as Admin
+#### Step 2: Login
 ```
-POST http://localhost:3000/api/auth/login
+POST /api/auth/login (Admin)
 Body: { "username": "admin", "password": "admin123" }
-```
-Save the returned token.
+→ Token saved to {{admin_token}}
 
-### Step 4: Create Event (as Admin)
-```
-POST http://localhost:3000/api/events
-Headers: Authorization: Bearer <admin_token>
-Body: { "title": "My Event", "date": "2025-12-15T10:00:00.000Z", "maxAttendees": 50 }
-```
-
-### Step 5: Login as User
-```
-POST http://localhost:3000/api/auth/login
+POST /api/auth/login (User)
 Body: { "username": "user1", "password": "user123" }
+→ Token saved to {{user_token}}
 ```
 
-### Step 6: View Events (as User)
+#### Step 3: Create Event (Admin)
 ```
-GET http://localhost:3000/api/events
-Headers: Authorization: Bearer <user_token>
-```
-
-### Step 7: Register for Event (as User)
-```
-POST http://localhost:3000/api/events/<event_id>/register
-Headers: Authorization: Bearer <user_token>
+POST /api/events
+Headers: Authorization: Bearer {{admin_token}}
+Body: { "title": "My Event", "date": "2025-12-15T10:00:00.000Z", "maxAttendees": 50 }
+→ Event ID saved to {{event_id}}
 ```
 
-### Step 8: View Analytics (as Admin)
+#### Step 4: View Events (User)
 ```
-GET http://localhost:3000/api/analytics/top-events
-Headers: Authorization: Bearer <admin_token>
+GET /api/events
+Headers: Authorization: Bearer {{user_token}}
+```
+
+#### Step 5: Register for Event (User)
+```
+POST /api/events/{{event_id}}/register
+Headers: Authorization: Bearer {{user_token}}
+```
+
+#### Step 6: View Analytics (Admin)
+```
+GET /api/analytics/top-events
+Headers: Authorization: Bearer {{admin_token}}
+```
+
+#### Step 7: Logout
+```
+POST /api/auth/logout
+Headers: Authorization: Bearer {{user_token}}
+```
+
+### Test Cases Included
+
+- ✅ Success scenarios for all endpoints
+- ✅ Authentication failures (no token, invalid token)
+- ✅ Authorization failures (user accessing admin routes)
+- ✅ Validation failures (missing required fields)
+- ✅ Edge cases (already registered, event full, etc.)
+
+---
+
+## 🛡️ Security Features
+
+- **Password Hashing:** bcryptjs with salt rounds
+- **JWT Authentication:** Secure token-based auth
+- **Token Blacklisting:** Logout invalidates tokens
+- **Role-Based Access Control:** Admin vs User permissions
+- **Input Validation:** Mongoose schema validation
+- **Error Handling:** No sensitive data in error messages
+
+---
+
+## 📁 Project Structure
+
+```
+event-management-api/
+├── src/
+│   ├── config/
+│   │   └── db.js                 # MongoDB connection
+│   ├── controllers/
+│   │   ├── analytics.controller.js
+│   │   ├── auth.controller.js
+│   │   ├── event.controller.js
+│   │   └── registration.controller.js
+│   ├── middleware/
+│   │   ├── auth.middleware.js    # JWT verification
+│   │   └── role.middleware.js    # Role checking
+│   ├── models/
+│   │   ├── event.model.js
+│   │   ├── registration.model.js
+│   │   └── user.model.js
+│   ├── routes/
+│   │   ├── analytics.routes.js
+│   │   ├── auth.routes.js
+│   │   └── event.routes.js
+│   ├── utils/
+│   │   ├── errorHandler.js       # Error handling utilities
+│   │   └── tokenBlacklist.js     # Token blacklist management
+│   └── server.js                 # Application entry point
+├── .env                          # Environment variables
+├── .eslintrc.json                # ESLint configuration
+├── .gitignore
+├── .prettierrc.json              # Prettier configuration
+├── Event-Management-API.postman_collection.json
+├── package.json
+└── README.md
 ```
 
 ---
 
-## License
-ISC
+## 🧹 Code Quality
+
+### Linting
+
+```bash
+# Check for linting errors
+npm run lint
+
+# Auto-fix linting errors
+npm run lint:fix
+```
+
+### Formatting
+
+```bash
+# Format all files with Prettier
+npm run format
+```
+
+### JSDoc Documentation
+
+All functions include comprehensive JSDoc comments:
+
+```javascript
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/register
+ * @access  Public
+ * @param   {Object} req - Express request object
+ * @param   {Object} res - Express response object
+ * @returns {Object} Success message and user ID
+ */
+```
+
+---
+
+## 🚀 Development Scripts
+
+```bash
+# Start development server with auto-reload
+npm run dev
+
+# Start production server
+npm start
+
+# Run ESLint
+npm run lint
+
+# Fix ESLint errors automatically
+npm run lint:fix
+
+# Format code with Prettier
+npm run format
+```
+
+---
+
+## 🌐 Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/event-management` |
+| `JWT_SECRET` | Secret key for JWT signing | `your_super_secret_key` |
+| `PORT` | Server port | `3000` |
+| `NODE_ENV` | Environment mode | `development` or `production` |
+
+---
+
+## 📝 Notes
+
+### Token Blacklist
+- Currently uses in-memory storage (resets on server restart)
+- For production, use Redis or database for persistent blacklist
+
+### Date Filtering
+- Dates should be in ISO 8601 format: `YYYY-MM-DDTHH:mm:ss.sssZ`
+- Query parameter dates can be simplified: `YYYY-MM-DD`
+
+### Validation
+- Username must be at least 3 characters
+- Event title must be at least 3 characters
+- maxAttendees must be at least 1 if provided
+- Compound index on Registration prevents duplicate registrations
+
+---
+
+## 👨‍💻 Author
+
+Rishit Rajpara
+- GitHub: [@Kevit-Rishit-Rajpara](https://github.com/Kevit-Rishit-Rajpara)
+
