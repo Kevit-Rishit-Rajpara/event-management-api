@@ -1,36 +1,35 @@
 # Event Management API
 
-A production-ready RESTful API for managing events with user authentication, role-based authorization, event registration, and analytics. Built with Node.js, Express, and MongoDB.
+Hey, this is a solid RESTful API for managing events, built with Node.js, Express, and MongoDB. It handles user authentication, role-based permissions, event sign-ups, and some analytics.
 
-## 🚀 Features
+## What It Does
 
-- ✅ User authentication with JWT
-- ✅ Role-based authorization (User/Admin)
-- ✅ Event CRUD operations
-- ✅ Event registration with capacity management
-- ✅ Analytics dashboard (events per month, top events)
-- ✅ Comprehensive error handling
-- ✅ Input validation at model level
-- ✅ Token blacklisting for logout
-- ✅ Code documentation with JSDoc
-- ✅ ESLint & Prettier configured
-- ✅ REST API standards compliant
+- User login/signup with JWT tokens
+- Role-based access (regular users and admins)
+- Full CRUD for events
+- Register for events with capacity limits
+- Analytics like monthly event counts and top events
+- Solid error handling and input validation
+- Token blacklisting for logout
+- Code documented with JSDoc
+- ESLint and Prettier set up
+- Follows REST standards
 
-## 📋 Base URL
+## Base URL
 ```
 http://localhost:3000/api
 ```
 
-## 🛠️ Technologies
+## Tech Stack
 
 - **Runtime:** Node.js
 - **Framework:** Express.js
-- **Database:** MongoDB with Mongoose ODM
-- **Authentication:** JWT (jsonwebtoken)
-- **Password Hashing:** bcryptjs
-- **Validation:** Mongoose schema validation
+- **Database:** MongoDB with Mongoose
+- **Auth:** JWT
+- **Passwords:** Hashed with bcryptjs
+- **Validation:** Mongoose schemas
 - **Code Quality:** ESLint, Prettier
-- **Development:** Nodemon
+- **Dev:** Nodemon
 
 ---
 
@@ -850,8 +849,5 @@ npm run format
 
 ---
 
-## 👨‍💻 Author
 
-Rishit Rajpara
-- GitHub: [@Kevit-Rishit-Rajpara](https://github.com/Kevit-Rishit-Rajpara)
 
