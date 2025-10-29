@@ -831,23 +831,7 @@ npm run format
 
 ---
 
-## 📝 Notes
 
-### Token Blacklist
-- Currently uses in-memory storage (resets on server restart)
-- For production, use Redis or database for persistent blacklist
-
-### Date Filtering
-- Dates should be in ISO 8601 format: `YYYY-MM-DDTHH:mm:ss.sssZ`
-- Query parameter dates can be simplified: `YYYY-MM-DD`
-
-### Validation
-- Username must be at least 3 characters
-- Event title must be at least 3 characters
-- maxAttendees must be at least 1 if provided
-- Compound index on Registration prevents duplicate registrations
-
----
 
 
 
