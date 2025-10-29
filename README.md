@@ -1,18 +1,18 @@
 # Event Management API - NestJS
 
-Production-ready Event Management API built with **NestJS**, **MongoDB**, and **Passport JWT**. This is the NestJS implementation of the Event Management API.
+Hey, this is the NestJS version of the Event Management API. It's built with NestJS, MongoDB, and Passport JWT for a more structured, scalable approach.
 
-## 🎯 NestJS Implementation Highlights
+## What Makes This NestJS Version Cool
 
-- ✅ **Modular Architecture** - Organized into feature modules (Auth, Users, Events, Analytics)
-- ✅ **Dependency Injection** - NestJS built-in DI container
-- ✅ **DTOs with Class Validator** - Automatic request validation
-- ✅ **Passport JWT Strategy** - Industry-standard authentication
-- ✅ **Guards & Decorators** - Clean authorization logic
-- ✅ **TypeScript First** - Full TypeScript support
-- ✅ **Mongoose Decorators** - Type-safe MongoDB schemas
-- ✅ **Exception Filters** - Built-in error handling
-- ✅ **Pipes & Interceptors** - Request/response transformation
+- Modular setup with separate modules for auth, users, events, and analytics
+- Built-in dependency injection for clean code
+- DTOs with class validator for automatic input validation
+- Passport JWT strategy for solid authentication
+- Guards and decorators for easy authorization
+- Full TypeScript support
+- Mongoose decorators for type-safe database schemas
+- Built-in error handling with exception filters
+- Pipes and interceptors for request/response handling
 
 ## 📦 Installation
 
@@ -307,15 +307,4 @@ Built files will be in the `dist/` directory.
 - [Class Validator](https://github.com/typestack/class-validator)
 - [Mongoose](https://mongoosejs.com/)
 
-## 📝 License
 
-ISC
-
----
-
-**This NestJS implementation provides the same functionality as the Express version but with:**
-- Better structure and organization
-- Enhanced type safety
-- Built-in dependency injection
-- Cleaner code with decorators
-- Better scalability for large applications
