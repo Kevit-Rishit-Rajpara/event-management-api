@@ -1,229 +1,78 @@
 # Event Management API
 
-> A production-ready RESTful API for managing events with user authentication, role-based authorization, event registration, and analytics. **Available in both Express.js and NestJS implementations!**
+Hey there! This is a solid RESTful API for managing events, built with user authentication, role-based permissions, event sign-ups, and some basic analytics. The cool part is, I've got it implemented in two ways: one using good old Express.js and another with NestJS. Both do the same thing, so you can pick what suits your style or learn by comparing them.
 
-[![Node.js](https://img.shields.io/badge/Node.js-v14+-green.svg)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express-4.x-blue.svg)](https://expressjs.com/)
-[![NestJS](https://img.shields.io/badge/NestJS-11.x-red.svg)](https://nestjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.x-green.svg)](https://www.mongodb.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+## What's Inside
 
----
+The API handles everything you'd expect for event management:
 
-## 📋 Table of Contents
+- **Authentication**: Sign up, log in, log out with JWT tokens. Supports user and admin roles.
+- **Events**: Create, view, update, or delete events. Admins can manage them, and there's filtering by date/location.
+- **Registrations**: Sign up for events, cancel if needed, with checks to avoid overbooking.
+- **Analytics**: Get monthly event stats or top events – admin access only.
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Repository Structure](#-repository-structure)
-- [API Endpoints](#-api-endpoints)
-- [Technologies](#-technologies)
-- [Quick Start](#-quick-start)
-- [Implementation Comparison](#-implementation-comparison)
-- [Documentation](#-documentation)
-- [Testing](#-testing)
-- [License](#-license)
+## Repo Layout
 
----
+- `main` branch: This overview and docs.
+- `nodejs-express` branch: The Express.js version.
+- `nestjs` branch: The NestJS version.
 
-## 🎯 Overview
+## Getting Started
 
-This repository contains **two complete implementations** of an Event Management API:
+Pick your flavor:
 
-1. **Express.js Version** (`nodejs-express` branch) - Traditional Node.js with Express
-2. **NestJS Version** (`nestjs` branch) - Modern TypeScript framework with advanced features
+For Express.js:
 
-Both implementations provide identical functionality with the same API endpoints, making it perfect for:
-- Learning different Node.js frameworks
-- Understanding architectural differences
-- Comparing Express vs NestJS
-- Building production-ready APIs
-
----
-
-## ✨ Features
-
-Both implementations include:
-
-### 🔐 Authentication & Authorization
-- JWT-based authentication
-- User registration and login
-- Token blacklisting for logout
-- Role-based access control (User/Admin)
-- Secure password hashing
-
-### 🎉 Event Management
-- Create, read, update, delete events (CRUD)
-- Filter events by date and location
-- Admin-only event creation
-- Event capacity management
-- Timestamp tracking
-
-### 📝 Event Registration
-- Register for events
-- Cancel registration
-- Capacity checking
-- Duplicate prevention
-
-### 📊 Analytics
-- Events per month
-- Top 3 events
-- Admin-only access
-
----
-
-## 📁 Repository Structure
-
-```
-main (you are here)         → Documentation & Overview
-├── nodejs-express          → Express.js Implementation
-└── nestjs                  → NestJS Implementation
-```
-
----
-
-## 🚀 Quick Start
-
-### Choose Your Implementation
-
-#### Express.js (Traditional)
 ```bash
 git checkout nodejs-express
 npm install
 npm run dev
 ```
 
-#### NestJS (Modern)
+For NestJS:
+
 ```bash
 git checkout nestjs
 npm install --legacy-peer-deps
 npm run start:dev
 ```
 
-Both run at: `http://localhost:3000/api`
+Either way, it'll run on `http://localhost:3000/api`.
 
----
+## API Endpoints
 
-## 📚 API Endpoints
+Here's what you can do:
 
-| Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
-| POST | `/api/auth/register` | Register user | Public |
-| POST | `/api/auth/login` | Login user | Public |
-| POST | `/api/auth/logout` | Logout user | Private |
-| POST | `/api/events` | Create event | Admin |
-| GET | `/api/events` | Get events | Private |
-| GET | `/api/events/:id` | Get event | Private |
-| PUT | `/api/events/:id` | Update event | Admin |
-| DELETE | `/api/events/:id` | Delete event | Admin |
-| POST | `/api/events/:id/register` | Register for event | Private |
-| DELETE | `/api/events/:id/register` | Cancel registration | Private |
-| GET | `/api/analytics/events-per-month` | Monthly stats | Admin |
-| GET | `/api/analytics/top-events` | Top 3 events | Admin |
+- `POST /api/auth/register` - Sign up (public)
+- `POST /api/auth/login` - Log in (public)
+- `POST /api/auth/logout` - Log out (needs auth)
+- `POST /api/events` - Create event (admin only)
+- `GET /api/events` - List events (needs auth)
+- `GET /api/events/:id` - Get specific event (needs auth)
+- `PUT /api/events/:id` - Update event (admin only)
+- `DELETE /api/events/:id` - Delete event (admin only)
+- `POST /api/events/:id/register` - Register for event (needs auth)
+- `DELETE /api/events/:id/register` - Cancel registration (needs auth)
+- `GET /api/analytics/events-per-month` - Monthly stats (admin only)
+- `GET /api/analytics/top-events` - Top 3 events (admin only)
 
----
+## Tech Stack
 
-## 🔄 Implementation Comparison
+Express version uses Node.js, Express, MongoDB with Mongoose, JWT, bcrypt, and some linting tools.
 
-| Feature | Express.js | NestJS |
-|---------|-----------|--------|
-| **Setup** | ⚡ Fast | 🕐 Moderate |
-| **Learning** | 📈 Easy | 📈 Moderate |
-| **TypeScript** | ⚠️ Optional | ✅ Built-in |
-| **Structure** | 🔧 Flexible | 📦 Opinionated |
-| **DI** | ❌ No | ✅ Yes |
-| **Scalability** | ⚠️ Manual | ✅ Excellent |
+NestJS version has NestJS with TypeScript, MongoDB via Mongoose, Passport for auth, and validation.
 
-### Use Express When:
-- ✅ Quick prototyping
-- ✅ Small projects
-- ✅ Maximum flexibility
+Both need a `.env` file like this:
 
-### Use NestJS When:
-- ✅ Large applications
-- ✅ TypeScript projects
-- ✅ Enterprise features
-
----
-
-## 📖 Documentation
-
-### Branch-Specific Docs
-- **Express:** Switch to `nodejs-express` branch and read README.md
-- **NestJS:** Switch to `nestjs` branch and read README-NESTJS.md
-- **Migration Guide:** Available in `nestjs` branch
-
----
-
-## 🧪 Testing
-
-Both implementations include Postman collection:
-- Import `Event-Management-API.postman_collection.json`
-- Test all endpoints with saved environments
-- Automated token management
-
----
-
-## 🛠️ Technologies
-
-### Express Stack
-- Node.js + Express
-- MongoDB + Mongoose  
-- JWT + bcrypt
-- ESLint + Prettier
-
-### NestJS Stack
-- NestJS + TypeScript
-- MongoDB + @nestjs/mongoose
-- Passport + JWT Strategy
-- class-validator
-
----
-
-## 🌐 Environment Setup
-
-Both require `.env` file:
-```env
+```
 MONGO_URI=mongodb://localhost:27017/event-management
 JWT_SECRET=your_secret_key_here
 PORT=3000
 NODE_ENV=development
 ```
 
----
+## Testing
 
-## 📊 Project Stats
+There's a Postman collection included – import `Event-Management-API.postman_collection.json` and test away.
 
-- ✅ 2 Complete Implementations
-- ✅ 12 API Endpoints
-- ✅ 4 Database Models  
-- ✅ Full Authentication
-- ✅ Role-Based Auth
-- ✅ Production Ready
-- ✅ Well Documented
-
----
-
-## 👨‍💻 Author
-
-**Rishit Rajpara**
-- GitHub: [@Kevit-Rishit-Rajpara](https://github.com/Kevit-Rishit-Rajpara)
-
----
-
-## 📝 License
-
-ISC
-
----
-
-<div align="center">
-
-## ⭐ Star this repo if helpful!
-
-### Choose Your Path:
-
-**[Try Express.js →](../../tree/nodejs-express)** | **[Try NestJS →](../../tree/nestjs)**
-
-Made with ❤️ for developers
-
-</div>
+For more details, check the README in each branch.
